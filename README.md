@@ -19,7 +19,15 @@ React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključe
    ```bash
    npm run preview
    ```
+### Backend
+1. Otvoriti zaseban terminal
+2. cd backend
+3. pip install -r requirements.txt
+4. uvicorn app.main:app --reload
 
+## Bonus
+   Instalirati sqlitebrowser za lep pregled podataka(dev)
+   
 ### Struktura
 - `src/app` - rute, layout
 - `src/state` - globalno stanje (auth)
