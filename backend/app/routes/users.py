@@ -10,6 +10,10 @@ from ..utils.auth import get_current_active_user
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
+@router.get("/health", status_code=status.HTTP_200_OK)
+def health_check():
+    return {"status": "ok"}
+
 @router.get("/", response_model=List[UserResponse])
 def get_all_users(
     db: Session = Depends(get_db),

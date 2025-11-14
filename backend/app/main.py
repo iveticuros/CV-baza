@@ -16,7 +16,9 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Za production stavi specifične domene
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",],  # Za production stavi specifične domene
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

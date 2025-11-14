@@ -7,15 +7,19 @@ React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključe
    ```bash
    npm install
    ```
-2. Dev server:
+
+2. Query za react fetchovanje:
+```npm install @tanstack/react-query
+```
+3. Dev server:
    ```bash
    npm run dev
    ```
-3. Build:
+4. Build:
    ```bash
    npm run build
    ```
-4. Pregled build-a:
+5. Pregled build-a:
    ```bash
    npm run preview
    ```
@@ -25,7 +29,7 @@ React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključe
 3. pip install -r requirements.txt
 4. uvicorn app.main:app --reload
 
-## Bonus
+#### Bonus
    Instalirati sqlitebrowser za lep pregled podataka(dev)
    
 ### Struktura
