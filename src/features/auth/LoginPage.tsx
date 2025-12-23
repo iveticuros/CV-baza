@@ -23,6 +23,13 @@ export function LoginPage() {
     e.preventDefault();
     if (!name.trim()) return;
     setError(null);
+    
+    // If role is student, navigate to registration page
+    if (role === 'student') {
+      navigate('/register', { replace: true });
+      return;
+    }
+    
     if (healthQuery.isSuccess) {
       login({ name: name.trim(), role });
       navigate(`/${role}`, { replace: true });
