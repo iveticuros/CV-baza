@@ -1,7 +1,9 @@
 node_modules
 dist
+build
+*.tsbuildinfo
+.env
 .DS_Store
 .vite
 *.log
-
-
+*.db

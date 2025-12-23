@@ -49,5 +49,3 @@ function student(i: number): Student {
 }
 
 export const allStudents: Student[] = Array.from({ length: 28 }, (_, i) => student(i));
-
-

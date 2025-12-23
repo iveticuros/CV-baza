@@ -1,12 +1,46 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FilterPanel, FilterState, defaultFilterState } from './components/FilterPanel';
 import { StudentsResults } from '@features/students/StudentsResults';
-import { allStudents } from '@mock/students';
 import { filterStudents } from '@features/students/filtering';
+import type { Student } from '@mock/students';
 
 export function CompanyDashboard() {
   const [filters, setFilters] = useState<FilterState>(defaultFilterState);
-  const results = useMemo(() => filterStudents(allStudents, filters), [filters]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/students/')
+      .then(res => res.json())
+      .then(data => {
+        const transformed: Student[] = data.map((s: any) => ({
+          id: String(s.id),
+          firstName: s.ime,
+          lastName: s.prezime,
+          faculty: '',
+          gpa: 0,
+          skills: [],
+          knowledge: [],
+          yearsOfExperience: 0,
+          location: ''
+        }));
+        setStudents(transformed);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const results = useMemo(() => filterStudents(students, filters), [students, filters]);
+
+  if (loading) {
+    return (
+      <div className="stack-lg" style={{ textAlign: 'center', padding: '40px' }}>
+        <div>Učitavanje studenata...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="stack-lg">
@@ -30,5 +64,3 @@ export function CompanyDashboard() {
     </div>
   );
 }
-
-

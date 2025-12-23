@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 export type FilterState = {
   query?: string;
   faculties: string[];
@@ -8,14 +10,6 @@ export type FilterState = {
   minYears?: number;
   maxYears?: number;
 };
-
-export const defaultFaculties = [
-  'ETF (Elektrotehnički)',
-  'FTN (Tehničke nauke)',
-  'PMF (Prirodno-matematički)',
-  'RAF (Računarstvo)',
-  'FON (Organizacione nauke)'
-];
 
 export const defaultSkills = [
   'JavaScript',
@@ -43,6 +37,21 @@ export const defaultFilterState: FilterState = {
 export function FilterPanel(props: { value: FilterState; onChange: (v: FilterState) => void }) {
   const v = props.value;
   const set = (patch: Partial<FilterState>) => props.onChange({ ...v, ...patch });
+  const [faculties, setFaculties] = useState<string[]>([]);
+  const [loadingFaculties, setLoadingFaculties] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/fakulteti/')
+      .then(res => res.json())
+      .then(data => {
+        const facultyNames = data.map((f: any) => f.naziv);
+        setFaculties(facultyNames);
+        setLoadingFaculties(false);
+      })
+      .catch(() => {
+        setLoadingFaculties(false);
+      });
+  }, []);
 
   return (
     <div className="stack">
@@ -57,11 +66,15 @@ export function FilterPanel(props: { value: FilterState; onChange: (v: FilterSta
       </div>
       <div className="stack">
         <label className="label">Fakultet</label>
-        <CheckboxSelect
-          options={defaultFaculties}
-          values={v.faculties}
-          onChange={(values) => set({ faculties: values })}
-        />
+        {loadingFaculties ? (
+          <div className="muted" style={{ padding: '8px' }}>Učitavanje fakulteta...</div>
+        ) : (
+          <CheckboxSelect
+            options={faculties}
+            values={v.faculties}
+            onChange={(values) => set({ faculties: values })}
+          />
+        )}
       </div>
       <div className="stack">
         <label className="label">Minimalan prosek: {v.minGpa ?? '—'}</label>
@@ -96,53 +109,6 @@ export function FilterPanel(props: { value: FilterState; onChange: (v: FilterSta
   );
 }
 
-function MultiSelect(props: { options: string[]; values: string[]; onChange: (values: string[]) => void }) {
-  const toggle = (opt: string) => {
-    const exists = props.values.includes(opt);
-    if (exists) props.onChange(props.values.filter((v) => v !== opt));
-    else props.onChange([...props.values, opt]);
-  };
-  return (
-    <div className="chips row" style={{ flexWrap: 'wrap', gap: 8, padding: 8 }}>
-      {props.options.map((opt) => {
-        const active = props.values.includes(opt);
-        return (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => toggle(opt)}
-            className={`pill${active ? ' is-active' : ''}`}
-          >
-            {opt}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function RadioSelect(props: { options: string[]; value: string; onChange: (value: string) => void }) {
-  return (
-    <div className="stack">
-      {props.options.map((opt) => {
-        const id = `opt-${opt}`;
-        return (
-          <label key={opt} className="row" style={{ gap: 8 }}>
-            <input
-              type="radio"
-              name="faculty"
-              id={id}
-              checked={props.value === opt}
-              onChange={() => props.onChange(props.value === opt ? '' : opt)}
-            />
-            <span>{opt}</span>
-          </label>
-        );
-      })}
-    </div>
-  );
-}
-
 function CheckboxSelect(props: { options: string[]; values: string[]; onChange: (values: string[]) => void }) {
   const toggle = (opt: string) => {
     const exists = props.values.includes(opt);
@@ -170,5 +136,3 @@ function CheckboxSelect(props: { options: string[]; values: string[]; onChange: 
     </div>
   );
 }
-
-

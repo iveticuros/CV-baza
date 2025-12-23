@@ -18,5 +18,3 @@ export function filterStudents(students: Student[], f: FilterState): Student[] {
     return true;
   });
 }
-
-

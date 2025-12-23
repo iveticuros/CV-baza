@@ -1,0 +1,23 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "aws-0-us-west-1.pooler.supabase.com",
+            "port": 6543,
+            "driver": "PostgreSQL",
+            "name": "Property Management sb",
+            "database": "postgres",
+            "username": "postgres.sbejaxaoxcqfclnildhl"
+        },
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "CV baza",
+            "database": "cv_baza",
+            "username": "uros"
+        }
+    ]
+}

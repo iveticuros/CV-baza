@@ -12,10 +12,9 @@ const rootElement = document.getElementById('root')!;
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
-

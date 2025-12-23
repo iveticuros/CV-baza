@@ -4,7 +4,6 @@ import { Role, useAuth } from '@state/auth';
 import { useQuery } from '@tanstack/react-query';
 import { fetchHealth } from '../../services/api';
 
-
 export function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +23,6 @@ export function LoginPage() {
     e.preventDefault();
     if (!name.trim()) return;
     setError(null);
-    // Ako health već uspeo -> nastavi, inače refetch i odluči
     if (healthQuery.isSuccess) {
       login({ name: name.trim(), role });
       navigate(`/${role}`, { replace: true });
@@ -52,7 +50,6 @@ export function LoginPage() {
             <div className="row" style={{ gap: 10 }}>
               <img src="/logo.svg" alt="BEST" width={40} height={40} />
               <h1 style={{ margin: 0 }}>BEST CV Baza</h1>
-              {/* status dot */}
               <span
                 title={
                   healthQuery.isLoading
@@ -121,5 +118,3 @@ export function LoginPage() {
     </div>
   );
 }
-
-

@@ -47,7 +47,7 @@ def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered"
         )
-    
+
     hashed_password = get_password_hash(user.password)
     new_user = User(
         name=user.name,
@@ -73,7 +73,7 @@ def update_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     if user_update.name is not None:
         existing_user.name = user_update.name
     if user_update.email is not None:
@@ -82,7 +82,7 @@ def update_user(
         existing_user.role = user_update.role
     if user_update.password is not None:
         existing_user.hashed_password = get_password_hash(user_update.password)
-    
+
     db.commit()
     db.refresh(existing_user)
     return existing_user
@@ -99,13 +99,13 @@ def delete_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     if user.id == current_user.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Users cannot delete themselves"
         )
-    
+
     db.delete(user)
     db.commit()
     return None

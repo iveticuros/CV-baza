@@ -16,11 +16,15 @@ export function StudentsResults(props: { students: Student[] }) {
                 <h3 style={{ margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {s.firstName} {s.lastName}
                 </h3>
-                <div className="muted" style={{ marginTop: -2 }}>{s.faculty}</div>
-                <div className="meta" style={{ marginTop: 4 }}>
-                  <span>Prosek {s.gpa.toFixed(1)}</span>
-                  <span>Iskustvo {experienceLabel(s.yearsOfExperience)}</span>
-                </div>
+                {s.faculty && (
+                  <div className="muted" style={{ marginTop: -2 }}>{s.faculty}</div>
+                )}
+                {(s.gpa > 0 || s.yearsOfExperience > 0) && (
+                  <div className="meta" style={{ marginTop: 4 }}>
+                    {s.gpa > 0 && <span>Prosek {s.gpa.toFixed(1)}</span>}
+                    {s.yearsOfExperience > 0 && <span>Iskustvo {experienceLabel(s.yearsOfExperience)}</span>}
+                  </div>
+                )}
               </div>
             </div>
             {(() => {
@@ -58,7 +62,7 @@ export function StudentsResults(props: { students: Student[] }) {
               </div>
             )}
             <div className="row space-between" style={{ alignItems: 'center', marginTop: 6 }}>
-              <div className="muted">{s.location}</div>
+              {s.location && <div className="muted">{s.location}</div>}
               <button className="btn btn-outline">Kontakt</button>
             </div>
           </div>
@@ -94,5 +98,3 @@ function splitSkills(skills: string[]): { languages: string[]; technologies: str
   }
   return { languages, technologies };
 }
-
-

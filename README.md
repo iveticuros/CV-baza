@@ -1,6 +1,6 @@
-## BEST CV Baza (Frontend)
+## BEST CV Baza
 
-React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključen (mock podaci i login).
+React + TypeScript (Vite) frontend i FastAPI backend za CV bazu u BEST duhu.
 
 ### Pokretanje
 1. Instalacija:
@@ -8,9 +8,6 @@ React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključe
    npm install
    ```
 
-2. Query za react fetchovanje:
-```npm install @tanstack/react-query
-```
 3. Dev server:
    ```bash
    npm run dev
@@ -27,10 +24,16 @@ React + TypeScript (Vite) frontend za CV bazu u BEST duhu. Backend nije uključe
 1. Otvoriti zaseban terminal
 2. cd backend
 3. pip install -r requirements.txt
-4. uvicorn app.main:app --reload
+4. **PostgreSQL setup:**
+   - Pokreni PostgreSQL: `brew services start postgresql@15`
+   - Kreiraj bazu: `createdb cv_baza`
+   - (Ili koristi SQL skriptu: `psql -f create_database.sql`)
+5. Pokreni server: `python3 -m uvicorn app.main:app --reload`
 
-#### Bonus
-   Instalirati sqlitebrowser za lep pregled podataka(dev)
+#### Baza podataka
+- **Lokalno:** PostgreSQL (`postgresql://localhost/cv_baza`)
+- **AWS:** Spremno za migraciju na AWS RDS/Aurora - pogledaj `backend/AWS_MIGRATION.md`
+- **Nema potrebe za izmenom koda** - samo promeni `DATABASE_URL` u `.env` fajlu
    
 ### Struktura
 - `src/app` - rute, layout
@@ -71,7 +74,8 @@ Zamenite `public/logo.svg` zvaničnim logom ako želite.
 6. Pogledajte `.github/workflows/deploy.yml` za CI/CD.
 
 ### Napomene
-- Autentikacija i podaci su mock (nema backend-a). Kada backend bude spreman, zameniti `src/mock` i logiku fetch-a realnim API pozivima i tokenima.
-- Logika je slojevita; pogledi su po ulogama, ali zajednička logika (npr. filtriranje) živi u svojim modulima.
+- Backend koristi PostgreSQL bazu podataka
+- Frontend koristi mock podatke za razvoj, ali može da se poveže sa backend API-jem
+- Logika je slojevita; pogledi su po ulogama, ali zajednička logika (npr. filtriranje) živi u svojim modulima
 
 # CV-baza

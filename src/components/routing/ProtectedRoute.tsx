@@ -9,5 +9,3 @@ export function ProtectedRoute(props: { allow: Role[]; children: React.ReactNode
   if (!props.allow.includes(user.role)) return <Navigate to={`/${user.role}`} replace />;
   return <>{props.children}</>;
 }
-
-

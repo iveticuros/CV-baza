@@ -11,13 +11,8 @@ export function StudentDashboard() {
             <span className="label">Ime:</span>
             <strong>{user?.name}</strong>
           </div>
-          <p style={{ color: 'var(--color-muted)', marginTop: 0 }}>
-            Ovo je kostur studentskog pogleda. Kasnije ćemo dodati uređivanje CV-a i povezivanje sa backend-om.
-          </p>
         </div>
       </div>
     </div>
   );
 }
-
-
