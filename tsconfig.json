@@ -19,7 +19,8 @@
       "@state/*": ["src/state/*"],
       "@styles/*": ["src/styles/*"],
       "@mock/*": ["src/mock/*"],
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src"]

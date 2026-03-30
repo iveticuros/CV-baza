@@ -15,7 +15,8 @@ export default defineConfig({
       '@state': path.resolve(__dirname, './src/state'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@mock': path.resolve(__dirname, './src/mock'),
-      '@lib': path.resolve(__dirname, './src/lib')
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@services': path.resolve(__dirname, './src/services')
     }
   },
   server: {

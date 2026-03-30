@@ -1,8 +1,9 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@state/auth';
 
 export function Header() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   return (
     <header className="header">
       <div className="container header-inner">
@@ -27,7 +28,16 @@ export function Header() {
                 Admin
               </NavLink>
             )}
-            <button className="btn btn-ghost" onClick={logout}>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                void (async () => {
+                  await logout();
+                  navigate('/login', { replace: true });
+                })();
+              }}
+            >
               Odjava
             </button>
           </nav>

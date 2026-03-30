@@ -1,54 +1,99 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  fetchMe,
+  getAccessToken,
+  loginWithPassword,
+  logoutApi,
+  refreshAccessToken,
+  setAccessToken,
+} from '@services/api';
 
 export type Role = 'student' | 'company' | 'admin';
 
-export type User = {
-  id: string;
+export type AuthUser = {
+  id: number;
   name: string;
+  email: string;
   role: Role;
+  email_verified?: boolean;
+  admin_approved?: boolean;
 };
 
 type AuthContextValue = {
-  user: User | null;
-  login: (args: { name: string; role: Role }) => void;
-  logout: () => void;
+  user: AuthUser | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<Role>;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const STORAGE_KEY = 'cv-baza-auth';
-
 export function AuthProvider(props: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw) as User;
-        setUser(parsed);
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    }
+  const refreshUser = useCallback(async () => {
+    const me = await fetchMe();
+    setUser({
+      id: me.id,
+      name: me.name,
+      email: me.email,
+      role: me.role as Role,
+      email_verified: me.email_verified,
+      admin_approved: me.admin_approved,
+    });
   }, []);
 
-  const login = (args: { name: string; role: Role }) => {
-    const newUser: User = {
-      id: crypto.randomUUID(),
-      name: args.name,
-      role: args.role
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const tok = await refreshAccessToken();
+        if (cancelled) return;
+        if (tok) {
+          setAccessToken(tok);
+          await refreshUser();
+        }
+      } catch {
+        if (!cancelled) setUser(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
     };
-    setUser(newUser);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-  };
+  }, [refreshUser]);
 
-  const logout = () => {
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const data = await loginWithPassword(email, password);
+      setAccessToken(data.access_token);
+      const role = data.user.role as Role;
+      setUser({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role,
+      });
+      await refreshUser();
+      return role;
+    },
+    [refreshUser]
+  );
+
+  const logout = useCallback(async () => {
+    await logoutApi();
     setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
-  };
+  }, []);
 
-  const value = useMemo<AuthContextValue>(() => ({ user, login, logout }), [user]);
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, loading, login, logout, refreshUser }),
+    [user, loading, login, logout, refreshUser]
+  );
+
   return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 }
 
@@ -57,3 +102,5 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
+
+export { getAccessToken, setAccessToken };

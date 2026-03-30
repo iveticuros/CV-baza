@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { apiJson } from '@services/api';
 
 export type FilterState = {
   query?: string;
@@ -41,11 +42,9 @@ export function FilterPanel(props: { value: FilterState; onChange: (v: FilterSta
   const [loadingFaculties, setLoadingFaculties] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8000/fakulteti/')
-      .then(res => res.json())
+    apiJson<{ id: number; naziv: string }[]>('/fakulteti/')
       .then(data => {
-        const facultyNames = data.map((f: any) => f.naziv);
-        setFaculties(facultyNames);
+        setFaculties(data.map(f => f.naziv));
         setLoadingFaculties(false);
       })
       .catch(() => {

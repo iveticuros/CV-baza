@@ -1,0 +1,7 @@
+ROLE_STUDENT = "student"
+ROLE_ADMIN = "admin"
+ROLE_COMPANY = "company"
+
+ALL_ROLES = (ROLE_STUDENT, ROLE_ADMIN, ROLE_COMPANY)
+
+REFRESH_COOKIE_NAME = "refresh_token"

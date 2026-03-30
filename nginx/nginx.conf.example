@@ -1,0 +1,36 @@
+# Reverse proxy for production TLS termination.
+# Place behind certbot / Let's Encrypt.
+
+upstream cv_api {
+    server api:8000;
+}
+
+server {
+    listen 80;
+    server_name api.cv.best.rs;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name api.cv.best.rs;
+
+    ssl_certificate /etc/letsencrypt/live/api.cv.best.rs/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.cv.best.rs/privkey.pem;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+    client_max_body_size 6m;
+
+    location / {
+        proxy_pass http://cv_api;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

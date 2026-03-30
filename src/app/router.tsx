@@ -6,15 +6,25 @@ import { AdminDashboard } from '@features/admin/AdminDashboard';
 import { StudentRegistrationForm } from '@features/student/components/StudentRegistrationForm';
 import { AppLayout } from '@components/layout/AppLayout';
 import { ProtectedRoute } from '@components/routing/ProtectedRoute';
+import { VerifyEmailPage } from '@features/misc/VerifyEmailPage';
+import { PrivacyPolicyPage } from '@features/misc/PrivacyPolicyPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/login" replace />
+    element: <Navigate to="/login" replace />,
   },
   {
     path: '/login',
-    element: <LoginPage />
+    element: <LoginPage />,
+  },
+  {
+    path: '/verify-email',
+    element: <VerifyEmailPage />,
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPolicyPage />,
   },
   {
     path: '/register',
@@ -22,12 +32,14 @@ export const router = createBrowserRouter([
       <div className="hero container">
         <div style={{ maxWidth: 800, width: '100%' }}>
           <div className="stack-lg">
-            <h1 className="section-title" style={{ margin: 0 }}>Registracija studenta</h1>
+            <h1 className="section-title" style={{ margin: 0 }}>
+              Registracija studenta
+            </h1>
             <StudentRegistrationForm onBack={() => window.history.back()} />
           </div>
         </div>
       </div>
-    )
+    ),
   },
   {
     element: <AppLayout />,
@@ -38,7 +50,7 @@ export const router = createBrowserRouter([
           <ProtectedRoute allow={['company']}>
             <CompanyDashboard />
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: '/student',
@@ -46,7 +58,7 @@ export const router = createBrowserRouter([
           <ProtectedRoute allow={['student']}>
             <StudentDashboard />
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: '/admin',
@@ -54,8 +66,8 @@ export const router = createBrowserRouter([
           <ProtectedRoute allow={['admin']}>
             <AdminDashboard />
           </ProtectedRoute>
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ]);
